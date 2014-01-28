@@ -5,9 +5,18 @@ exports.bind = function (fn, scope) {
 };
 
 /**
- * @param obj
- * @param fn (item, key, obj) -> (newValue)
- * @param thisArg optional
+ * @callback objutilsObjMapCallback
+ * @param item
+ * @param {string|number} key
+ * @param {object} obj
+ */
+
+/**
+ * Note: Returns a shallow copy of object.
+ *
+ * @param {object} obj
+ * @param {objutilsObjMapCallback|function} fn (item, key, obj) -> (newValue)
+ * @param [thisArg] optional
  * */
 exports.objMap = function(obj, fn, thisArg) {
 	if (thisArg) {
@@ -26,10 +35,18 @@ exports.objMap = function(obj, fn, thisArg) {
 };
 
 /**
- * @param obj
- * @param fn (accumulated, item, key) -> (newAccumulatedValue)
+ * @callback objutilsObjReduceCallback
+ * @param accumulated
+ * @param item
+ * @param {string|number} key
+ * @param {object} obj
+ */
+
+/**
+ * @param {object} obj
+ * @param {objutilsObjReduceCallback|function}  fn (accumulated, item, key, obj) -> (newAccumulatedValue)
  * @param initialValue
- * @param thisArg optional
+ * @param [thisArg] optional
  * */
 exports.objReduce = function(obj, fn, initialValue, thisArg) {
 	if (thisArg) {
@@ -41,7 +58,7 @@ exports.objReduce = function(obj, fn, initialValue, thisArg) {
 	if (obj && fn) {
 		for (var key in obj) {
 			if (obj.hasOwnProperty(key)) {
-				value = fn(value, obj[key], key);
+				value = fn(value, obj[key], key, obj);
 			}
 		}
 	}
@@ -49,9 +66,9 @@ exports.objReduce = function(obj, fn, initialValue, thisArg) {
 };
 
 /**
- * @param obj
- * @param fn (item, key, obj)
- * @param thisArg optional
+ * @param {object} obj
+ * @param {objutilsObjMapCallback|function} fn (item, key, obj)
+ * @param [thisArg] optional
  * */
 exports.objForEach = function (obj, fn, thisArg) {
 	if (thisArg) {
