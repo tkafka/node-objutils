@@ -1,0 +1,9 @@
+{
+  "name": "objutils",
+  "description": "Utils for working with objects siilarly to arrays, work in progress.",
+  "version": "0.0.1",
+  "private": false,
+  "main": "./objutils.js",
+  "dependencies": {
+  }
+}
