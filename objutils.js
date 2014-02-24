@@ -81,3 +81,12 @@ exports.objForEach = function (obj, fn, thisArg) {
 	}
 };
 
+exports.objLength = function (obj) {
+	var l = 0;
+	for (var key in obj) {
+		if (!obj.hasOwnProperty(key)) continue;
+		l++;
+	}
+	return l;
+};
+
