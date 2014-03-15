@@ -81,3 +81,36 @@ exports.objForEach = function (obj, fn, thisArg) {
 	}
 };
 
+/**
+ * Hack for using object as sparse array
+ * @param {object} obj
+ * @param {objutilsObjMapCallback|function} fn (item, key, obj)
+ * @param [sortFn] sort
+ * @param [thisArg] optional
+ */
+exports.objForEachSorted = function (obj, fn, sortFn, thisArg) {
+	if (thisArg) {
+		fn = exports.bind(fn, thisArg);
+	}
+
+    var keys = [];
+	for (var key in obj) {
+		if (!obj.hasOwnProperty(key)) continue;
+        keys.push(key);
+	}
+
+    keys.sort(sortFn);
+
+    for (var key in keys) {
+        fn(obj[key], key, obj);
+    }
+};
+
+exports.objLength = function (obj) {
+	var l = 0;
+	for (var key in obj) {
+		if (!obj.hasOwnProperty(key)) continue;
+		l++;
+	}
+	return l;
+};
