@@ -114,3 +114,32 @@ exports.objLength = function (obj) {
 	}
 	return l;
 };
+
+// DFS
+
+var _dfs = function (obj, functor, path, key, isRoot) {
+	// when we encounter the string, this if branch makes sure we don't iterate it by letters :)
+	if (typeof obj == "object") {
+
+		for (var k in obj) {
+			if (!obj.hasOwnProperty(k)) continue;
+
+			path.push(k);
+			_dfs(obj[k], functor, path, obj, false);
+			functor(obj[k], k, path, typeof obj[k] != "object");
+			path.pop();
+		}
+
+	}
+};
+
+/**
+ *
+ * @param obj
+ * @param functor function(value, key, path (= array of key names), isLeaf)
+ */
+exports.dfs = function(obj, functor) {
+	_dfs(obj, functor, [], null, true);
+};
+
+

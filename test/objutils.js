@@ -28,3 +28,34 @@ exports.oneBigTestLookThisIsAQuickSmallObviousModuleAnyway = function(t) {
 
 	t.done();
 };
+
+var obj = {
+	a: {
+		1: {
+			A: "I"
+		},
+		2: {
+			B: "II"
+		}
+	},
+	b: {
+		4: {
+			C: "III"
+		},
+		3: {
+			D: "IV"
+		}
+	}
+};
+
+exports.testDfs = function(t) {
+	objutils.dfs(obj, function(value, key, path, isLeaf) {
+		console.log(path.join('.') + ' = ' + value + (isLeaf ? '!' : '' ));
+
+	});
+
+	t.done();
+};
+
+
+
