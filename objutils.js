@@ -143,3 +143,37 @@ exports.dfs = function(obj, functor) {
 };
 
 
+var _dfsMod = function (obj, functor, path, key, isRoot) {
+	// when we encounter the string, this if branch makes sure we don't iterate it by letters :)
+	if (typeof obj == "object") {
+
+		// first functor, to allow renaming keys
+		for (var k in obj) {
+			if (!obj.hasOwnProperty(k)) continue;
+
+			path.push(k);
+			functor(obj[k], k, obj, path, typeof obj[k] != "object");
+			path.pop();
+		}
+
+		for (var k in obj) {
+			if (!obj.hasOwnProperty(k)) continue;
+
+			path.push(k);
+			_dfs(obj[k], functor, path, obj, false);
+			path.pop();
+		}
+
+	}
+};
+
+/**
+ *
+ * @param obj
+ * @param functor function(value, key, path (= array of key names), isLeaf)
+ */
+exports.dfsMod = function(obj, functor) {
+	_dfsMod(obj, functor, [], null, true);
+};
+
+
