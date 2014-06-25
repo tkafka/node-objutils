@@ -160,7 +160,7 @@ var _dfsMod = function (obj, functor, path, key, isRoot) {
 			if (!obj.hasOwnProperty(k)) continue;
 
 			path.push(k);
-			_dfs(obj[k], functor, path, obj, false);
+			_dfsMod(obj[k], functor, path, obj, false);
 			path.pop();
 		}
 
