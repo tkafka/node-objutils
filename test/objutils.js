@@ -58,4 +58,21 @@ exports.testDfs = function(t) {
 };
 
 
+exports.testObjValues = function(t) {
+	var obj = {
+		a: 1,
+		b: 2,
+		c: 3
+	};
+
+	var a = objutils.objValues(obj);
+
+	console.log(a);
+	t.ok(a.indexOf(1) !== -1);
+	t.ok(a.indexOf(2) !== -1);
+	t.ok(a.indexOf(3) !== -1);
+	t.ok(a.length == 3);
+	t.done();
+};
+
 

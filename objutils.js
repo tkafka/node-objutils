@@ -67,6 +67,21 @@ exports.objReduce = function(obj, fn, initialValue, thisArg) {
 
 /**
  * @param {object} obj
+ * @return {Array}
+ * */
+exports.objValues = function (obj) {
+	var a = [];
+
+	for (var key in obj) {
+		if (!obj.hasOwnProperty(key)) continue;
+		a.push(obj[key]);
+	}
+
+	return a;
+};
+
+/**
+ * @param {object} obj
  * @param {objutilsObjMapCallback|function} fn (item, key, obj)
  * @param [thisArg] optional
  * */
