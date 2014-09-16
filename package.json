@@ -2,7 +2,8 @@
   "name": "objutils",
   "description": "Utils for working with objects similarly to arrays, work in progress.",
 	"email": "tk+node-objutils@tomaskafka.com",
-  "version": "0.0.8",
+	"repository": "https://github.com/tkafka/node-objutils.git",
+  "version": "0.0.9",
   "private": false,
   "main": "./objutils.js",
   "dependencies": {
