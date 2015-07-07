@@ -121,6 +121,29 @@ exports.objForEachSorted = function (obj, fn, sortFn, thisArg) {
     }
 };
 
+/**
+ * @param {object} obj
+ * @param {objutilsObjMapCallback|function} fn (item, key, obj)
+ * @param [thisArg] optional
+ * */
+exports.objFilter = function (obj, fn, thisArg) {
+	if (thisArg) {
+		fn = exports.bind(fn, thisArg);
+	}
+
+	var filteredObj = {};
+
+	for (var key in obj) {
+		if (!obj.hasOwnProperty(key)) continue;
+		if (fn(obj[key], key, obj)) {
+			filteredObj[key] = obj[key];
+		}
+	}
+
+	return filteredObj;
+};
+
+
 exports.objLength = function (obj) {
 	var l = 0;
 	for (var key in obj) {
