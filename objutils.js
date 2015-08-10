@@ -104,19 +104,21 @@ exports.objForEach = function (obj, fn, thisArg) {
  * @param [thisArg] optional
  */
 exports.objForEachSorted = function (obj, fn, sortFn, thisArg) {
+  var keys = [],
+      key;
+
 	if (thisArg) {
 		fn = exports.bind(fn, thisArg);
 	}
 
-    var keys = [];
-	for (var key in obj) {
+	for (key in obj) {
 		if (!obj.hasOwnProperty(key)) continue;
         keys.push(key);
 	}
 
     keys.sort(sortFn);
 
-    for (var key in keys) {
+    for (key in keys) {
         fn(obj[key], key, obj);
     }
 };
@@ -182,11 +184,13 @@ exports.dfs = function(obj, functor) {
 
 
 var _dfsMod = function (obj, functor, path, key, isRoot) {
+  var k;
+
 	// when we encounter the string, this if branch makes sure we don't iterate it by letters :)
 	if (typeof obj == "object") {
 
 		// first functor, to allow renaming keys
-		for (var k in obj) {
+		for (k in obj) {
 			if (!obj.hasOwnProperty(k)) continue;
 
 			path.push(k);
@@ -194,7 +198,7 @@ var _dfsMod = function (obj, functor, path, key, isRoot) {
 			path.pop();
 		}
 
-		for (var k in obj) {
+		for (k in obj) {
 			if (!obj.hasOwnProperty(k)) continue;
 
 			path.push(k);
