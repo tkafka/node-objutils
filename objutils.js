@@ -1,7 +1,7 @@
 exports.bind = function (fn, scope) {
-	return function () {
-		return fn.apply(scope, arguments);
-	}
+  return function () {
+    return fn.apply(scope, arguments);
+  };
 };
 
 /**
@@ -18,20 +18,22 @@ exports.bind = function (fn, scope) {
  * @param {objutilsObjMapCallback|function} fn (item, key, obj) -> (newValue)
  * @param [thisArg] optional
  * */
-exports.objMap = function(obj, fn, thisArg) {
-	if (thisArg) {
-		fn = exports.bind(fn, thisArg);
-	}
+exports.objMap = function (obj, fn, thisArg) {
+  var newObj = {},
+      key;
 
-	var newObj = {};
-	if (obj && fn) {
-		for (var key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				newObj[key] = fn(obj[key], key, obj);
-			}
-		}
-	}
-	return newObj;
+  if (thisArg) {
+    fn = exports.bind(fn, thisArg);
+  }
+
+  if (obj && fn) {
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        newObj[key] = fn(obj[key], key, obj);
+      }
+    }
+  }
+  return newObj;
 };
 
 /**
@@ -48,21 +50,22 @@ exports.objMap = function(obj, fn, thisArg) {
  * @param initialValue
  * @param [thisArg] optional
  * */
-exports.objReduce = function(obj, fn, initialValue, thisArg) {
-	if (thisArg) {
-		fn = exports.bind(fn, thisArg);
-	}
+exports.objReduce = function (obj, fn, initialValue, thisArg) {
+  var value = initialValue,
+      key;
 
-	var value = initialValue;
+  if (thisArg) {
+    fn = exports.bind(fn, thisArg);
+  }
 
-	if (obj && fn) {
-		for (var key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				value = fn(value, obj[key], key, obj);
-			}
-		}
-	}
-	return value;
+  if (obj && fn) {
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        value = fn(value, obj[key], key, obj);
+      }
+    }
+  }
+  return value;
 };
 
 /**
@@ -70,14 +73,16 @@ exports.objReduce = function(obj, fn, initialValue, thisArg) {
  * @return {Array}
  * */
 exports.objValues = function (obj) {
-	var a = [];
+  var a = [],
+      key;
 
-	for (var key in obj) {
-		if (!obj.hasOwnProperty(key)) continue;
-		a.push(obj[key]);
-	}
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      a.push(obj[key]);
+    }
+  }
 
-	return a;
+  return a;
 };
 
 /**
@@ -86,14 +91,17 @@ exports.objValues = function (obj) {
  * @param [thisArg] optional
  * */
 exports.objForEach = function (obj, fn, thisArg) {
-	if (thisArg) {
-		fn = exports.bind(fn, thisArg);
-	}
+  var key;
 
-	for (var key in obj) {
-		if (!obj.hasOwnProperty(key)) continue;
-		fn(obj[key], key, obj);
-	}
+  if (thisArg) {
+    fn = exports.bind(fn, thisArg);
+  }
+
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      fn(obj[key], key, obj);
+    }
+  }
 };
 
 /**
@@ -104,21 +112,25 @@ exports.objForEach = function (obj, fn, thisArg) {
  * @param [thisArg] optional
  */
 exports.objForEachSorted = function (obj, fn, sortFn, thisArg) {
-	if (thisArg) {
-		fn = exports.bind(fn, thisArg);
-	}
+  var keys = [],
+      key,
+      i;
 
-    var keys = [];
-	for (var key in obj) {
-		if (!obj.hasOwnProperty(key)) continue;
-        keys.push(key);
-	}
+  if (thisArg) {
+    fn = exports.bind(fn, thisArg);
+  }
 
-    keys.sort(sortFn);
-
-    for (var key in keys) {
-        fn(obj[key], key, obj);
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      keys.push(key);
     }
+  }
+
+  keys.sort(sortFn);
+
+  for (i = 0; i < keys.length; i += 1) {
+    fn(obj[key], key, obj);
+  }
 };
 
 /**
@@ -127,30 +139,33 @@ exports.objForEachSorted = function (obj, fn, sortFn, thisArg) {
  * @param [thisArg] optional
  * */
 exports.objFilter = function (obj, fn, thisArg) {
-	if (thisArg) {
-		fn = exports.bind(fn, thisArg);
-	}
+  var filteredObj = {},
+      key;
 
-	var filteredObj = {};
+  if (thisArg) {
+    fn = exports.bind(fn, thisArg);
+  }
 
-	for (var key in obj) {
-		if (!obj.hasOwnProperty(key)) continue;
-		if (fn(obj[key], key, obj)) {
-			filteredObj[key] = obj[key];
-		}
-	}
+  for (key in obj) {
+    if (obj.hasOwnProperty(key) && fn(obj[key], key, obj)) {
+      filteredObj[key] = obj[key];
+    }
+  }
 
-	return filteredObj;
+  return filteredObj;
 };
 
 
 exports.objLength = function (obj) {
-	var l = 0;
-	for (var key in obj) {
-		if (!obj.hasOwnProperty(key)) continue;
-		l++;
-	}
-	return l;
+  var l = 0,
+      key;
+
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      l += 1;
+    }
+  }
+  return l;
 };
 
 exports.objToArray = function (obj) {
@@ -164,20 +179,23 @@ exports.objToArray = function (obj) {
 
 // DFS
 
-var _dfs = function (obj, functor, path, key, isRoot) {
-	// when we encounter the string, this if branch makes sure we don't iterate it by letters :)
-	if (typeof obj == "object") {
+var _dfs = function (obj, functor, path) {
+  var k;
 
-		for (var k in obj) {
-			if (!obj.hasOwnProperty(k)) continue;
+  // when we encounter the string, this if branch makes sure we don't iterate it by letters :)
+  if (typeof obj === "object") {
 
-			path.push(k);
-			_dfs(obj[k], functor, path, obj, false);
-			functor(obj[k], k, path, typeof obj[k] != "object");
-			path.pop();
-		}
+    for (k in obj) {
+      if (obj.hasOwnProperty(k)) {
 
-	}
+        path.push(k);
+        _dfs(obj[k], functor, path, obj, false);
+        functor(obj[k], k, path, typeof obj[k] !== "object");
+        path.pop();
+      }
+    }
+
+  }
 };
 
 /**
@@ -185,33 +203,37 @@ var _dfs = function (obj, functor, path, key, isRoot) {
  * @param obj
  * @param functor function(value, key, path (= array of key names), isLeaf)
  */
-exports.dfs = function(obj, functor) {
-	_dfs(obj, functor, [], null, true);
+exports.dfs = function (obj, functor) {
+  _dfs(obj, functor, [], null, true);
 };
 
 
-var _dfsMod = function (obj, functor, path, key, isRoot) {
-	// when we encounter the string, this if branch makes sure we don't iterate it by letters :)
-	if (typeof obj == "object") {
+var _dfsMod = function (obj, functor, path) {
+  var k;
 
-		// first functor, to allow renaming keys
-		for (var k in obj) {
-			if (!obj.hasOwnProperty(k)) continue;
+  // when we encounter the string, this if branch makes sure we don't iterate it by letters :)
+  if (typeof obj === "object") {
 
-			path.push(k);
-			functor(obj[k], k, obj, path, typeof obj[k] != "object");
-			path.pop();
-		}
+    // first functor, to allow renaming keys
+    for (k in obj) {
+      if (obj.hasOwnProperty(k)) {
 
-		for (var k in obj) {
-			if (!obj.hasOwnProperty(k)) continue;
+        path.push(k);
+        functor(obj[k], k, obj, path, typeof obj[k] !== "object");
+        path.pop();
+      }
+    }
 
-			path.push(k);
-			_dfsMod(obj[k], functor, path, obj, false);
-			path.pop();
-		}
+    for (k in obj) {
+      if (obj.hasOwnProperty(k)) {
 
-	}
+        path.push(k);
+        _dfsMod(obj[k], functor, path, obj, false);
+        path.pop();
+      }
+    }
+
+  }
 };
 
 /**
@@ -219,8 +241,6 @@ var _dfsMod = function (obj, functor, path, key, isRoot) {
  * @param obj
  * @param functor function(value, key, path (= array of key names), isLeaf)
  */
-exports.dfsMod = function(obj, functor) {
-	_dfsMod(obj, functor, [], null, true);
+exports.dfsMod = function (obj, functor) {
+  _dfsMod(obj, functor, [], null, true);
 };
-
-
