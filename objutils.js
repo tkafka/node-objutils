@@ -153,6 +153,15 @@ exports.objLength = function (obj) {
 	return l;
 };
 
+exports.objToArray = function (obj) {
+	var a = [];
+	for (var key in obj) {
+		if (!obj.hasOwnProperty(key)) continue;
+		a.push(obj[key]);
+	}
+	return a;
+};
+
 // DFS
 
 var _dfs = function (obj, functor, path, key, isRoot) {

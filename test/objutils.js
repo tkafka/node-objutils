@@ -95,5 +95,21 @@ exports.testObjFilter = function(t) {
 	t.done();
 };
 
+exports.testObjToArray = function(t) {
+	var obj = {
+		a: 1,
+		b: 2,
+		c: 3
+	};
+
+	var a = objutils.objToArray(obj);
+
+	// console.log(a);
+	t.ok(a.length === 3);
+	t.ok(a[0] === 1);
+	t.ok(a[1] === 2);
+	t.ok(a[2] === 3);
+	t.done();
+};
 
 
