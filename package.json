@@ -1,14 +1,23 @@
 {
   "name": "objutils",
   "description": "Utils for working with objects similarly to arrays, work in progress.",
-	"email": "tk+node-objutils@tomaskafka.com",
-	"repository": "https://github.com/tkafka/node-objutils.git",
-  "version": "0.0.11",
+  "email": "tk+node-objutils@tomaskafka.com",
+  "repository": "https://github.com/tkafka/node-objutils.git",
+  "version": "1.0.0",
   "private": false,
   "main": "./objutils.js",
+  "type": "module",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha ./test/",
+    "prettier:fix": "./node_modules/.bin/prettier --write './**/*.js'",
+    "prettier:check": "./node_modules/.bin/prettier --list-different './**/*.js'",
+    "lint": "./node_modules/.bin/eslint ."
+  },
   "dependencies": {
   },
   "devDependencies": {
-		"nodeunit": "*"
+    "mocha": "^9.1.2",
+    "eslint": "^7.28.0",
+    "prettier": "^2.3.1"
   }
 }

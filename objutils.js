@@ -1,8 +1,8 @@
-exports.bind = function (fn, scope) {
+export function bind(fn, scope) {
   return function () {
     return fn.apply(scope, arguments);
   };
-};
+}
 
 /**
  * @callback objutilsObjMapCallback
@@ -18,12 +18,12 @@ exports.bind = function (fn, scope) {
  * @param {objutilsObjMapCallback|function} fn (item, key, obj) -> (newValue)
  * @param [thisArg] optional
  * */
-exports.objMap = function (obj, fn, thisArg) {
+export function objMap(obj, fn, thisArg) {
   var newObj = {},
-      key;
+    key;
 
   if (thisArg) {
-    fn = exports.bind(fn, thisArg);
+    fn = bind(fn, thisArg);
   }
 
   if (obj && fn) {
@@ -34,7 +34,7 @@ exports.objMap = function (obj, fn, thisArg) {
     }
   }
   return newObj;
-};
+}
 
 /**
  * @callback objutilsObjReduceCallback
@@ -50,12 +50,12 @@ exports.objMap = function (obj, fn, thisArg) {
  * @param initialValue
  * @param [thisArg] optional
  * */
-exports.objReduce = function (obj, fn, initialValue, thisArg) {
+export function objReduce(obj, fn, initialValue, thisArg) {
   var value = initialValue,
-      key;
+    key;
 
   if (thisArg) {
-    fn = exports.bind(fn, thisArg);
+    fn = bind(fn, thisArg);
   }
 
   if (obj && fn) {
@@ -66,15 +66,15 @@ exports.objReduce = function (obj, fn, initialValue, thisArg) {
     }
   }
   return value;
-};
+}
 
 /**
  * @param {object} obj
  * @return {Array}
  * */
-exports.objValues = function (obj) {
+export function objValues(obj) {
   var a = [],
-      key;
+    key;
 
   for (key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -83,18 +83,18 @@ exports.objValues = function (obj) {
   }
 
   return a;
-};
+}
 
 /**
  * @param {object} obj
  * @param {objutilsObjMapCallback|function} fn (item, key, obj)
  * @param [thisArg] optional
  * */
-exports.objForEach = function (obj, fn, thisArg) {
+export function objForEach(obj, fn, thisArg) {
   var key;
 
   if (thisArg) {
-    fn = exports.bind(fn, thisArg);
+    fn = bind(fn, thisArg);
   }
 
   for (key in obj) {
@@ -102,7 +102,7 @@ exports.objForEach = function (obj, fn, thisArg) {
       fn(obj[key], key, obj);
     }
   }
-};
+}
 
 /**
  * Hack for using object as sparse array
@@ -111,13 +111,13 @@ exports.objForEach = function (obj, fn, thisArg) {
  * @param [sortFn] sort
  * @param [thisArg] optional
  */
-exports.objForEachSorted = function (obj, fn, sortFn, thisArg) {
+export function objForEachSorted(obj, fn, sortFn, thisArg) {
   var keys = [],
-      key,
-      i;
+    key,
+    i;
 
   if (thisArg) {
-    fn = exports.bind(fn, thisArg);
+    fn = bind(fn, thisArg);
   }
 
   for (key in obj) {
@@ -131,19 +131,19 @@ exports.objForEachSorted = function (obj, fn, sortFn, thisArg) {
   for (i = 0; i < keys.length; i += 1) {
     fn(obj[key], key, obj);
   }
-};
+}
 
 /**
  * @param {object} obj
  * @param {objutilsObjMapCallback|function} fn (item, key, obj)
  * @param [thisArg] optional
  * */
-exports.objFilter = function (obj, fn, thisArg) {
+export function objFilter(obj, fn, thisArg) {
   var filteredObj = {},
-      key;
+    key;
 
   if (thisArg) {
-    fn = exports.bind(fn, thisArg);
+    fn = bind(fn, thisArg);
   }
 
   for (key in obj) {
@@ -153,12 +153,11 @@ exports.objFilter = function (obj, fn, thisArg) {
   }
 
   return filteredObj;
-};
+}
 
-
-exports.objLength = function (obj) {
+export function objLength(obj) {
   var l = 0,
-      key;
+    key;
 
   for (key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -166,16 +165,16 @@ exports.objLength = function (obj) {
     }
   }
   return l;
-};
+}
 
-exports.objToArray = function (obj) {
-	var a = [];
-	for (var key in obj) {
-		if (!obj.hasOwnProperty(key)) continue;
-		a.push(obj[key]);
-	}
-	return a;
-};
+export function objToArray(obj) {
+  var a = [];
+  for (var key in obj) {
+    if (!obj.hasOwnProperty(key)) continue;
+    a.push(obj[key]);
+  }
+  return a;
+}
 
 // DFS
 
@@ -184,17 +183,14 @@ var _dfs = function (obj, functor, path) {
 
   // when we encounter the string, this if branch makes sure we don't iterate it by letters :)
   if (typeof obj === "object") {
-
     for (k in obj) {
       if (obj.hasOwnProperty(k)) {
-
         path.push(k);
         _dfs(obj[k], functor, path, obj, false);
         functor(obj[k], k, path, typeof obj[k] !== "object");
         path.pop();
       }
     }
-
   }
 };
 
@@ -203,21 +199,18 @@ var _dfs = function (obj, functor, path) {
  * @param obj
  * @param functor function(value, key, path (= array of key names), isLeaf)
  */
-exports.dfs = function (obj, functor) {
+export function dfs(obj, functor) {
   _dfs(obj, functor, [], null, true);
-};
-
+}
 
 var _dfsMod = function (obj, functor, path) {
   var k;
 
   // when we encounter the string, this if branch makes sure we don't iterate it by letters :)
   if (typeof obj === "object") {
-
     // first functor, to allow renaming keys
     for (k in obj) {
       if (obj.hasOwnProperty(k)) {
-
         path.push(k);
         functor(obj[k], k, obj, path, typeof obj[k] !== "object");
         path.pop();
@@ -226,13 +219,11 @@ var _dfsMod = function (obj, functor, path) {
 
     for (k in obj) {
       if (obj.hasOwnProperty(k)) {
-
         path.push(k);
         _dfsMod(obj[k], functor, path, obj, false);
         path.pop();
       }
     }
-
   }
 };
 
@@ -241,6 +232,20 @@ var _dfsMod = function (obj, functor, path) {
  * @param obj
  * @param functor function(value, key, path (= array of key names), isLeaf)
  */
-exports.dfsMod = function (obj, functor) {
+export function dfsMod(obj, functor) {
   _dfsMod(obj, functor, [], null, true);
-};
+}
+
+export default {
+  bind: bind,
+  objMap: objMap,
+  objReduce: objReduce,
+  objValues: objValues,
+  objForEach: objForEach,
+  objForEachSorted: objForEachSorted,
+  objFilter: objFilter,
+  objLength: objLength,
+  objToArray: objToArray,
+  dfs: dfs,
+  dfsMod: dfsMod
+}
