@@ -4,9 +4,6 @@ export function objMap(obj: object, fn: (item: any, key: string, obj: object) =>
 
 export function objReduce(obj: object, fn: (accumulated: any, item: any, key: string, obj: object) => any, initialValue: any, thisArg?: any): object
 
-export function objValues(obj: object): any[]
-export function objToArray(obj: object): any[]
-
 export function objForEach(obj: object, fn: (item: any, key: string, obj: object) => undefined, thisArg?: any): undefined
 export function objForEachSorted(obj: object, fn: (item: any, key: string, obj: object) => undefined, sortFn: function, thisArg?: any): undefined
 

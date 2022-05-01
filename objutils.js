@@ -70,23 +70,6 @@ export function objReduce(obj, fn, initialValue, thisArg) {
 
 /**
  * @param {object} obj
- * @return {Array}
- * */
-export function objValues(obj) {
-  var a = [],
-    key;
-
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      a.push(obj[key]);
-    }
-  }
-
-  return a;
-}
-
-/**
- * @param {object} obj
  * @param {objutilsObjMapCallback|function} fn (item, key, obj)
  * @param [thisArg] optional
  * */
@@ -167,9 +150,6 @@ export function objLength(obj) {
   return l;
 }
 
-let objToArray = objValues
-export function objToArray
-
 // DFS
 
 var _dfs = function (obj, functor, path) {
@@ -234,12 +214,10 @@ export default {
   bind: bind,
   objMap: objMap,
   objReduce: objReduce,
-  objValues: objValues,
   objForEach: objForEach,
   objForEachSorted: objForEachSorted,
   objFilter: objFilter,
   objLength: objLength,
-  objToArray: objToArray,
   dfs: dfs,
   dfsMod: dfsMod
 }
