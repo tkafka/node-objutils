@@ -167,14 +167,8 @@ export function objLength(obj) {
   return l;
 }
 
-export function objToArray(obj) {
-  var a = [];
-  for (var key in obj) {
-    if (!obj.hasOwnProperty(key)) continue;
-    a.push(obj[key]);
-  }
-  return a;
-}
+let objToArray = objValues
+export function objToArray
 
 // DFS
 
