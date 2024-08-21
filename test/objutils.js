@@ -42,7 +42,7 @@ describe("objutils", function () {
       function (buffer, item, key, obj) {
         return buffer + item;
       },
-      1
+      1,
     );
 
     assert.equal(reduceResult, 4);
@@ -52,7 +52,7 @@ describe("objutils", function () {
       function (item, key, obj) {
         // ...
       },
-      1
+      1,
     );
   });
 
