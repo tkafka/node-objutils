@@ -1,3 +1,11 @@
+/**
+ * Binds a function to a specific scope.
+ *
+ * @template T
+ * @param {function(this:T, ...any):any} fn - The function to be bound.
+ * @param {T} scope - The scope to bind the function to.
+ * @returns {function(...any):any} - The bound function.
+ */
 export function bind(fn, scope) {
   return function () {
     return fn.apply(scope, arguments);
@@ -5,19 +13,14 @@ export function bind(fn, scope) {
 }
 
 /**
- * @callback objutilsObjMapCallback
- * @param item
- * @param {string|number} key
- * @param {object} obj
- */
-
-/**
- * Note: Returns a shallow copy of object.
+ * Maps an object using the provided function.
  *
- * @param {object} obj
- * @param {objutilsObjMapCallback|function} fn (item, key, obj) -> (newValue)
- * @param [thisArg] optional
- * */
+ * @template T, U
+ * @param {object} obj - The object to be mapped.
+ * @param {function(this:any, T, string, object):U} fn - The mapping function.
+ * @param {any} [thisArg] - The `this` value for the mapping function.
+ * @returns {object<string, U>} - A new object with the mapped values.
+ */
 export function objMap(obj, fn, thisArg) {
   var newObj = {},
     key;
@@ -37,19 +40,15 @@ export function objMap(obj, fn, thisArg) {
 }
 
 /**
- * @callback objutilsObjReduceCallback
- * @param accumulated
- * @param item
- * @param {string|number} key
- * @param {object} obj
+ * Reduces an object using the provided function.
+ *
+ * @template T, U
+ * @param {object} obj - The object to be reduced.
+ * @param {function(this:any, U, T, string, object):U} fn - The reducing function.
+ * @param {U} initialValue - The initial value for the reduction.
+ * @param {any} [thisArg] - The `this` value for the reducing function.
+ * @returns {U} - The final reduced value.
  */
-
-/**
- * @param {object} obj
- * @param {objutilsObjReduceCallback|function}  fn (accumulated, item, key, obj) -> (newAccumulatedValue)
- * @param initialValue
- * @param [thisArg] optional
- * */
 export function objReduce(obj, fn, initialValue, thisArg) {
   var value = initialValue,
     key;
@@ -69,10 +68,14 @@ export function objReduce(obj, fn, initialValue, thisArg) {
 }
 
 /**
- * @param {object} obj
- * @param {objutilsObjMapCallback|function} fn (item, key, obj)
- * @param [thisArg] optional
- * */
+ * Iterates over an object, calling the provided function for each key-value pair.
+ *
+ * @template T
+ * @param {object} obj - The object to iterate over.
+ * @param {function(this:any, T, string, object):void} fn - The function to call for each key-value pair.
+ * @param {any} [thisArg] - The `this` value for the function.
+ * @returns {void}
+ */
 export function objForEach(obj, fn, thisArg) {
   var key;
 
@@ -88,11 +91,14 @@ export function objForEach(obj, fn, thisArg) {
 }
 
 /**
- * Hack for using object as sparse array
- * @param {object} obj
- * @param {objutilsObjMapCallback|function} fn (item, key, obj)
- * @param [sortFn] sort
- * @param [thisArg] optional
+ * Iterates over an object, calling the provided function for each key-value pair, sorted by the provided sort function.
+ *
+ * @template T
+ * @param {object} obj - The object to iterate over.
+ * @param {function(this:any, T, string, object):void} fn - The function to call for each key-value pair.
+ * @param {function(string, string):number} sortFn - The function to sort the keys.
+ * @param {any} [thisArg] - The `this` value for the function.
+ * @returns {void}
  */
 export function objForEachSorted(obj, fn, sortFn, thisArg) {
   var keys = [],
@@ -112,15 +118,19 @@ export function objForEachSorted(obj, fn, sortFn, thisArg) {
   keys.sort(sortFn);
 
   for (i = 0; i < keys.length; i += 1) {
-    fn(obj[key], key, obj);
+    fn(obj[keys[i]], keys[i], obj);
   }
 }
 
 /**
- * @param {object} obj
- * @param {objutilsObjMapCallback|function} fn (item, key, obj)
- * @param [thisArg] optional
- * */
+ * Filters an object using the provided function.
+ *
+ * @template T, U
+ * @param {object} obj - The object to be filtered.
+ * @param {function(this:any, T, string, object):boolean} fn - The filtering function.
+ * @param {any} [thisArg] - The `this` value for the filtering function.
+ * @returns {object<string, T>} - A new object with the filtered values.
+ */
 export function objFilter(obj, fn, thisArg) {
   var filteredObj = {},
     key;
@@ -138,6 +148,12 @@ export function objFilter(obj, fn, thisArg) {
   return filteredObj;
 }
 
+/**
+ * Returns the length of an object.
+ *
+ * @param {object} obj - The object to get the length of.
+ * @returns {number} - The length of the object.
+ */
 export function objLength(obj) {
   var l = 0,
     key;
@@ -160,7 +176,7 @@ var _dfs = function (obj, functor, path) {
     for (k in obj) {
       if (obj.hasOwnProperty(k)) {
         path.push(k);
-        _dfs(obj[k], functor, path, obj, false);
+        _dfs(obj[k], functor, path);
         functor(obj[k], k, path, typeof obj[k] !== "object");
         path.pop();
       }
@@ -169,12 +185,15 @@ var _dfs = function (obj, functor, path) {
 };
 
 /**
+ * Performs a depth-first search on an object, calling the provided function for each value.
  *
- * @param obj
- * @param functor function(value, key, path (= array of key names), isLeaf)
+ * @template T
+ * @param {object} obj - The object to perform the depth-first search on.
+ * @param {function(this:any, T, string, string[], boolean):void} functor - The function to call for each value.
+ * @returns {void}
  */
 export function dfs(obj, functor) {
-  _dfs(obj, functor, [], null, true);
+  _dfs(obj, functor, []);
 }
 
 var _dfsMod = function (obj, functor, path) {
@@ -194,7 +213,7 @@ var _dfsMod = function (obj, functor, path) {
     for (k in obj) {
       if (obj.hasOwnProperty(k)) {
         path.push(k);
-        _dfsMod(obj[k], functor, path, obj, false);
+        _dfsMod(obj[k], functor, path);
         path.pop();
       }
     }
@@ -202,12 +221,15 @@ var _dfsMod = function (obj, functor, path) {
 };
 
 /**
+ * Performs a depth-first search on an object, calling the provided function for each value and modifying the object.
  *
- * @param obj
- * @param functor function(value, key, path (= array of key names), isLeaf)
+ * @template T
+ * @param {object} obj - The object to perform the depth-first search on.
+ * @param {function(this:any, T, string, object, string[], boolean):void} functor - The function to call for each value.
+ * @returns {void}
  */
 export function dfsMod(obj, functor) {
-  _dfsMod(obj, functor, [], null, true);
+  _dfsMod(obj, functor, []);
 }
 
 export default {
@@ -219,5 +241,5 @@ export default {
   objFilter: objFilter,
   objLength: objLength,
   dfs: dfs,
-  dfsMod: dfsMod
-}
+  dfsMod: dfsMod,
+};
