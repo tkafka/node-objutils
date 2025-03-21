@@ -3,7 +3,7 @@
   "description": "Utils for working with objects similarly to arrays, work in progress.",
   "email": "tk+node-objutils@tomaskafka.com",
   "repository": "https://github.com/tkafka/node-objutils.git",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "main": "./objutils.js",
   "type": "module",
