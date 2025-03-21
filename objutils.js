@@ -270,3 +270,16 @@ const _dfsMod = (obj, functor, path) => {
 export function dfsMod(obj, functor) {
 	_dfsMod(obj, functor, []);
 }
+
+// legacy export
+export default {
+  bind: bind,
+  objMap: objMap,
+  objReduce: objReduce,
+  objForEach: objForEach,
+  objForEachSorted: objForEachSorted,
+  objFilter: objFilter,
+  objLength: objLength,
+  dfs: dfs,
+  dfsMod: dfsMod,
+};
