@@ -1,3 +1,6 @@
+// @ts-check
+/// <reference path="./objutils.d.ts" />
+
 /**
  * Binds a function to a scope
  * @param {Function} fn - The function to bind

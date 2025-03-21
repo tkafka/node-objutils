@@ -75,20 +75,20 @@ export function objForEach<T>(
 export function objForEachSorted<T>(
   obj: Record<string, T>,
   fn: (this: any, value: T, key: string, object: Record<string, T>) => void,
-  sortFn: (a: string, b: string) => number,
+  sortFn?: (a: string, b: string) => number,
   thisArg?: any
 ): void;
 
 /**
  * Filters an object using the provided function.
  *
- * @template T, U
+ * @template T
  * @param obj - The object to be filtered.
  * @param fn - The filtering function.
  * @param thisArg - The `this` value for the filtering function.
  * @returns A new object with the filtered values.
  */
-export function objFilter<T, U>(
+export function objFilter<T>(
   obj: Record<string, T>,
   fn: (this: any, value: T, key: string, object: Record<string, T>) => boolean,
   thisArg?: any
@@ -100,7 +100,7 @@ export function objFilter<T, U>(
  * @param obj - The object to get the length of.
  * @returns The length of the object.
  */
-export function objLength(obj: object): number;
+export function objLength(obj: Record<string, unknown>): number;
 
 /**
  * Performs a depth-first search on an object, calling the provided function for each value.
@@ -110,9 +110,8 @@ export function objLength(obj: object): number;
  * @param functor - The function to call for each value.
  */
 export function dfs<T>(
-  obj: object,
+  obj: Record<string, any>,
   functor: (
-    this: any,
     value: T,
     key: string,
     path: string[],
@@ -128,25 +127,12 @@ export function dfs<T>(
  * @param functor - The function to call for each value.
  */
 export function dfsMod<T>(
-  obj: object,
+  obj: Record<string, any>,
   functor: (
-    this: any,
     value: T,
     key: string,
-    object: object,
+    object: Record<string, any>,
     path: string[],
     isLeaf: boolean
   ) => void
 ): void;
-
-export default {
-  bind: typeof bind,
-  objMap: typeof objMap,
-  objReduce: typeof objReduce,
-  objForEach: typeof objForEach,
-  objForEachSorted: typeof objForEachSorted,
-  objFilter: typeof objFilter,
-  objLength: typeof objLength,
-  dfs: typeof dfs,
-  dfsMod: typeof dfsMod,
-};
