@@ -1,15 +1,11 @@
 /**
- * Binds a function to a specific scope.
- *
- * @template T
- * @param {function(this:T, ...any):any} fn - The function to be bound.
- * @param {T} scope - The scope to bind the function to.
- * @returns {function(...any):any} - The bound function.
+ * Binds a function to a scope
+ * @param {Function} fn - The function to bind
+ * @param {Object} scope - The scope to bind the function to
+ * @returns {Function} - The bound function
  */
 export function bind(fn, scope) {
-  return function () {
-    return fn.apply(scope, arguments);
-  };
+	return (...args) => fn.apply(scope, args);
 }
 
 /**
@@ -22,21 +18,25 @@ export function bind(fn, scope) {
  * @returns {Object.<string, U>} - A new object with the mapped values.
  */
 export function objMap(obj, fn, thisArg) {
-  var newObj = /** @type {Object.<string, U>} */ ({}),
-    key;
+	const newObj = /** @type {Object.<string, U>} */ ({});
+	let key;
 
-  if (thisArg) {
-    fn = bind(fn, thisArg);
-  }
+	if (thisArg) {
+		const boundFn = bind(fn, thisArg);
+		for (key in obj) {
+			if (Object.hasOwn(obj, key)) {
+				newObj[key] = boundFn(obj[key], key, obj);
+			}
+		}
+	} else if (obj && fn) {
+		for (key in obj) {
+			if (Object.hasOwn(obj, key)) {
+				newObj[key] = fn(obj[key], key, obj);
+			}
+		}
+	}
 
-  if (obj && fn) {
-    for (key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        newObj[key] = fn(obj[key], key, obj);
-      }
-    }
-  }
-  return newObj;
+	return newObj;
 }
 
 /**
@@ -50,21 +50,27 @@ export function objMap(obj, fn, thisArg) {
  * @returns {U} - The final reduced value.
  */
 export function objReduce(obj, fn, initialValue, thisArg) {
-  var value = initialValue,
-    key;
+	let value = initialValue;
+	let key;
 
-  if (thisArg) {
-    fn = bind(fn, thisArg);
-  }
+	if (thisArg) {
+		const boundFn = bind(fn, thisArg);
+		if (obj) {
+			for (key in obj) {
+				if (Object.hasOwn(obj, key)) {
+					value = boundFn(value, obj[key], key, obj);
+				}
+			}
+		}
+	} else if (obj && fn) {
+		for (key in obj) {
+			if (Object.hasOwn(obj, key)) {
+				value = fn(value, obj[key], key, obj);
+			}
+		}
+	}
 
-  if (obj && fn) {
-    for (key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        value = fn(value, obj[key], key, obj);
-      }
-    }
-  }
-  return value;
+	return value;
 }
 
 /**
@@ -77,17 +83,22 @@ export function objReduce(obj, fn, initialValue, thisArg) {
  * @returns {void}
  */
 export function objForEach(obj, fn, thisArg) {
-  var key;
+	let key;
 
-  if (thisArg) {
-    fn = bind(fn, thisArg);
-  }
-
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      fn(obj[key], key, obj);
-    }
-  }
+	if (thisArg) {
+		const boundFn = bind(fn, thisArg);
+		for (key in obj) {
+			if (Object.hasOwn(obj, key)) {
+				boundFn(obj[key], key, obj);
+			}
+		}
+	} else {
+		for (key in obj) {
+			if (Object.hasOwn(obj, key)) {
+				fn(obj[key], key, obj);
+			}
+		}
+	}
 }
 
 /**
@@ -101,25 +112,45 @@ export function objForEach(obj, fn, thisArg) {
  * @returns {void}
  */
 export function objForEachSorted(obj, fn, sortFn, thisArg) {
-  var keys = [],
-    key,
-    i;
+	const keys = [];
+	let key;
+	let i;
 
-  if (thisArg) {
-    fn = bind(fn, thisArg);
-  }
+	if (thisArg) {
+		const boundFn = bind(fn, thisArg);
 
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      keys.push(key);
-    }
-  }
+		for (key in obj) {
+			if (Object.hasOwn(obj, key)) {
+				keys.push(key);
+			}
+		}
 
-  keys.sort(sortFn);
+		if (typeof sortFn === 'function') {
+			keys.sort(sortFn);
+		} else {
+			keys.sort();
+		}
 
-  for (i = 0; i < keys.length; i += 1) {
-    fn(obj[keys[i]], keys[i], obj);
-  }
+		for (i = 0; i < keys.length; i++) {
+			boundFn(obj[keys[i]], keys[i], obj);
+		}
+	} else {
+		for (key in obj) {
+			if (Object.hasOwn(obj, key)) {
+				keys.push(key);
+			}
+		}
+
+		if (typeof sortFn === 'function') {
+			keys.sort(sortFn);
+		} else {
+			keys.sort();
+		}
+
+		for (i = 0; i < keys.length; i++) {
+			fn(obj[keys[i]], keys[i], obj);
+		}
+	}
 }
 
 /**
@@ -132,20 +163,25 @@ export function objForEachSorted(obj, fn, sortFn, thisArg) {
  * @returns {Object.<string, T>} - A new object with the filtered values.
  */
 export function objFilter(obj, fn, thisArg) {
-  var filteredObj = /** @type {Object.<string, T>} */ ({}),
-    key;
+	const filteredObj = /** @type {Object.<string, T>} */ ({});
+	let key;
 
-  if (thisArg) {
-    fn = bind(fn, thisArg);
-  }
+	if (thisArg) {
+		const boundFn = bind(fn, thisArg);
+		for (key in obj) {
+			if (Object.hasOwn(obj, key) && boundFn(obj[key], key, obj)) {
+				filteredObj[key] = obj[key];
+			}
+		}
+	} else {
+		for (key in obj) {
+			if (Object.hasOwn(obj, key) && fn(obj[key], key, obj)) {
+				filteredObj[key] = obj[key];
+			}
+		}
+	}
 
-  for (key in obj) {
-    if (obj.hasOwnProperty(key) && fn(obj[key], key, obj)) {
-      filteredObj[key] = obj[key];
-    }
-  }
-
-  return filteredObj;
+	return filteredObj;
 }
 
 /**
@@ -155,33 +191,33 @@ export function objFilter(obj, fn, thisArg) {
  * @returns {number} - The length of the object.
  */
 export function objLength(obj) {
-  var l = 0,
-    key;
+	let l = 0;
+	let key;
 
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      l += 1;
-    }
-  }
-  return l;
+	for (key in obj) {
+		if (Object.hasOwn(obj, key)) {
+			l += 1;
+		}
+	}
+	return l;
 }
 
 // DFS
 
-var _dfs = function (obj, functor, path) {
-  var k;
+const _dfs = (obj, functor, path) => {
+	let k;
 
-  // when we encounter the string, this if branch makes sure we don't iterate it by letters :)
-  if (typeof obj === "object") {
-    for (k in obj) {
-      if (obj.hasOwnProperty(k)) {
-        path.push(k);
-        _dfs(obj[k], functor, path);
-        functor(obj[k], k, path, typeof obj[k] !== "object");
-        path.pop();
-      }
-    }
-  }
+	// when we encounter the string, this if branch makes sure we don't iterate it by letters :)
+	if (typeof obj === 'object') {
+		for (k in obj) {
+			if (Object.hasOwn(obj, k)) {
+				path.push(k);
+				_dfs(obj[k], functor, path);
+				functor(obj[k], k, path, typeof obj[k] !== 'object');
+				path.pop();
+			}
+		}
+	}
 };
 
 /**
@@ -193,31 +229,31 @@ var _dfs = function (obj, functor, path) {
  * @returns {void}
  */
 export function dfs(obj, functor) {
-  _dfs(obj, functor, []);
+	_dfs(obj, functor, []);
 }
 
-var _dfsMod = function (obj, functor, path) {
-  var k;
+const _dfsMod = (obj, functor, path) => {
+	let k;
 
-  // when we encounter the string, this if branch makes sure we don't iterate it by letters :)
-  if (typeof obj === "object") {
-    // first functor, to allow renaming keys
-    for (k in obj) {
-      if (obj.hasOwnProperty(k)) {
-        path.push(k);
-        functor(obj[k], k, obj, path, typeof obj[k] !== "object");
-        path.pop();
-      }
-    }
+	// when we encounter the string, this if branch makes sure we don't iterate it by letters :)
+	if (typeof obj === 'object') {
+		// first functor, to allow renaming keys
+		for (k in obj) {
+			if (Object.hasOwn(obj, k)) {
+				path.push(k);
+				functor(obj[k], k, obj, path, typeof obj[k] !== 'object');
+				path.pop();
+			}
+		}
 
-    for (k in obj) {
-      if (obj.hasOwnProperty(k)) {
-        path.push(k);
-        _dfsMod(obj[k], functor, path);
-        path.pop();
-      }
-    }
-  }
+		for (k in obj) {
+			if (Object.hasOwn(obj, k)) {
+				path.push(k);
+				_dfsMod(obj[k], functor, path);
+				path.pop();
+			}
+		}
+	}
 };
 
 /**
@@ -229,17 +265,5 @@ var _dfsMod = function (obj, functor, path) {
  * @returns {void}
  */
 export function dfsMod(obj, functor) {
-  _dfsMod(obj, functor, []);
+	_dfsMod(obj, functor, []);
 }
-
-export default {
-  bind: bind,
-  objMap: objMap,
-  objReduce: objReduce,
-  objForEach: objForEach,
-  objForEachSorted: objForEachSorted,
-  objFilter: objFilter,
-  objLength: objLength,
-  dfs: dfs,
-  dfsMod: dfsMod,
-};
