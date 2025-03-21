@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import objutils from '../objutils.js';
+import { objMap, objReduce, objForEach, dfs, objFilter } from '../objutils.js';
 
 const obj = {
 	a: {
@@ -27,7 +27,7 @@ describe('objutils', () => {
 			b: 2,
 		};
 
-		const mapResult = objutils.objMap(input, (item, key, obj) => item * 2);
+		const mapResult = objMap(input, (item, key, obj) => item * 2);
 
 		expect(input.a).toBe(1);
 		expect(input.b).toBe(2);
@@ -35,11 +35,11 @@ describe('objutils', () => {
 		expect(mapResult.a).toBe(2);
 		expect(mapResult.b).toBe(4);
 
-		const reduceResult = objutils.objReduce(input, (buffer, item, key, obj) => buffer + item, 1);
+		const reduceResult = objReduce(input, (buffer, item, key, obj) => buffer + item, 1);
 
 		expect(reduceResult).toBe(4);
 
-		objutils.objForEach(
+		objForEach(
 			input,
 			(item, key, obj) => {
 				// ...
@@ -49,7 +49,7 @@ describe('objutils', () => {
 	});
 
 	it('dfs example', async () => {
-		objutils.dfs(obj, (value, key, path, isLeaf) => {
+		dfs(obj, (value, key, path, isLeaf) => {
 			// console.log(path.join('.') + ' = ' + value + (isLeaf ? '!' : '' ));
 		});
 	});
@@ -62,7 +62,7 @@ describe('objutils', () => {
 			d: 4,
 		};
 
-		const f = objutils.objFilter(obj, (value, key) => value % 2 === 0);
+		const f = objFilter(obj, (value, key) => value % 2 === 0);
 
 		expect(f.a).toBeUndefined();
 		expect(f.b).toBe(2);
