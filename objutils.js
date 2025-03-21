@@ -6,6 +6,8 @@
  * @param {Function} fn - The function to bind
  * @param {Object} scope - The scope to bind the function to
  * @returns {Function} - The bound function
+ * @deprecated Use the native Function.prototype.bind method instead: fn.bind(scope)
+ * Replace `bind(myFunction, myObject)` with `myFunction.bind(myObject)`
  */
 export function bind(fn, scope) {
 	// ES6 arrow functions maintain lexical 'this'
@@ -22,6 +24,8 @@ export function bind(fn, scope) {
  * @param {function(this:any, T, string, object):U} fn - The mapping function.
  * @param {any} [thisArg] - The `this` value for the mapping function.
  * @returns {Object.<string, U>} - A new object with the mapped values.
+ * @deprecated Consider using Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, fn(value, key, obj)]))
+ * Replace `objMap(myObject, myFunction)` with `Object.fromEntries(Object.entries(myObject).map(([key, value]) => [key, myFunction(value, key, myObject)]))`
  */
 export function objMap(obj, fn, thisArg) {
 	const newObj = /** @type {Object.<string, U>} */ ({});
@@ -56,6 +60,8 @@ export function objMap(obj, fn, thisArg) {
  * @param {U} initialValue - The initial value for the reduction.
  * @param {any} [thisArg] - The `this` value for the reducing function.
  * @returns {U} - The final reduced value.
+ * @deprecated Consider using Object.entries(obj).reduce((acc, [key, value]) => fn(acc, value, key, obj), initialValue)
+ * Replace `objReduce(myObject, myFunction, initialValue)` with `Object.entries(myObject).reduce((acc, [key, value]) => myFunction(acc, value, key, myObject), initialValue)`
  */
 export function objReduce(obj, fn, initialValue, thisArg) {
 	let value = initialValue;
@@ -88,6 +94,8 @@ export function objReduce(obj, fn, initialValue, thisArg) {
  * @param {function(this:any, T, string, object):void} fn - The function to call for each key-value pair.
  * @param {any} [thisArg] - The `this` value for the function.
  * @returns {void}
+ * @deprecated Consider using Object.entries(obj).forEach(([key, value]) => fn(value, key, obj))
+ * Replace `objForEach(myObject, myFunction)` with `Object.entries(myObject).forEach(([key, value]) => myFunction(value, key, myObject))`
  */
 export function objForEach(obj, fn, thisArg) {
 	if (!obj || !fn) return;
@@ -117,6 +125,8 @@ export function objForEach(obj, fn, thisArg) {
  * @param {function(string, string):number} sortFn - The function to sort the keys.
  * @param {any} [thisArg] - The `this` value for the function.
  * @returns {void}
+ * @deprecated Consider using Object.keys(obj).sort(sortFn).forEach(key => fn(obj[key], key, obj))
+ * Replace `objForEachSorted(myObject, myFunction, mySortFn)` with `Object.keys(myObject).sort(mySortFn || undefined).forEach(key => myFunction(myObject[key], key, myObject))`
  */
 export function objForEachSorted(obj, fn, sortFn, thisArg) {
 	if (!obj || !fn) return;
@@ -150,6 +160,8 @@ export function objForEachSorted(obj, fn, sortFn, thisArg) {
  * @param {function(this:any, T, string, object):boolean} fn - The filtering function.
  * @param {any} [thisArg] - The `this` value for the filtering function.
  * @returns {Object.<string, T>} - A new object with the filtered values.
+ * @deprecated Consider using Object.fromEntries(Object.entries(obj).filter(([key, value]) => fn(value, key, obj)))
+ * Replace `objFilter(myObject, myFunction)` with `Object.fromEntries(Object.entries(myObject).filter(([key, value]) => myFunction(value, key, myObject)))`
  */
 export function objFilter(obj, fn, thisArg) {
 	const filteredObj = /** @type {Object.<string, T>} */ ({});
@@ -179,6 +191,8 @@ export function objFilter(obj, fn, thisArg) {
  *
  * @param {object} obj - The object to get the length of.
  * @returns {number} - The length of the object.
+ * @deprecated Use Object.keys(obj).length instead
+ * Replace `objLength(myObject)` with `Object.keys(myObject).length`
  */
 export function objLength(obj) {
 	if (!obj) return 0;
