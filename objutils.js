@@ -19,10 +19,10 @@ export function bind(fn, scope) {
  * @param {object} obj - The object to be mapped.
  * @param {function(this:any, T, string, object):U} fn - The mapping function.
  * @param {any} [thisArg] - The `this` value for the mapping function.
- * @returns {object<string, U>} - A new object with the mapped values.
+ * @returns {Object.<string, U>} - A new object with the mapped values.
  */
 export function objMap(obj, fn, thisArg) {
-  var newObj = {},
+  var newObj = /** @type {Object.<string, U>} */ ({}),
     key;
 
   if (thisArg) {
@@ -129,10 +129,10 @@ export function objForEachSorted(obj, fn, sortFn, thisArg) {
  * @param {object} obj - The object to be filtered.
  * @param {function(this:any, T, string, object):boolean} fn - The filtering function.
  * @param {any} [thisArg] - The `this` value for the filtering function.
- * @returns {object<string, T>} - A new object with the filtered values.
+ * @returns {Object.<string, T>} - A new object with the filtered values.
  */
 export function objFilter(obj, fn, thisArg) {
-  var filteredObj = {},
+  var filteredObj = /** @type {Object.<string, T>} */ ({}),
     key;
 
   if (thisArg) {
