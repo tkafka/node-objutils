@@ -29,9 +29,9 @@ export function bind(fn, scope) {
  */
 export function objMap(obj, fn, thisArg) {
 	const newObj = /** @type {Object.<string, U>} */ ({});
-	
+
 	if (!obj || !fn) return newObj;
-	
+
 	if (thisArg) {
 		const boundFn = bind(fn, thisArg);
 		// Using Object.entries for cleaner iteration
@@ -65,9 +65,9 @@ export function objMap(obj, fn, thisArg) {
  */
 export function objReduce(obj, fn, initialValue, thisArg) {
 	let value = initialValue;
-	
+
 	if (!obj || !fn) return value;
-	
+
 	if (thisArg) {
 		const boundFn = bind(fn, thisArg);
 		Object.entries(obj).forEach(([key, val]) => {
@@ -99,7 +99,7 @@ export function objReduce(obj, fn, initialValue, thisArg) {
  */
 export function objForEach(obj, fn, thisArg) {
 	if (!obj || !fn) return;
-	
+
 	if (thisArg) {
 		const boundFn = bind(fn, thisArg);
 		Object.entries(obj).forEach(([key, value]) => {
@@ -130,16 +130,16 @@ export function objForEach(obj, fn, thisArg) {
  */
 export function objForEachSorted(obj, fn, sortFn, thisArg) {
 	if (!obj || !fn) return;
-	
+
 	// Extract keys and sort them
-	const keys = Object.keys(obj).filter(key => Object.hasOwn(obj, key));
-	
+	const keys = Object.keys(obj).filter((key) => Object.hasOwn(obj, key));
+
 	if (typeof sortFn === 'function') {
 		keys.sort(sortFn);
 	} else {
 		keys.sort();
 	}
-	
+
 	if (thisArg) {
 		const boundFn = bind(fn, thisArg);
 		for (const key of keys) {
@@ -165,9 +165,9 @@ export function objForEachSorted(obj, fn, sortFn, thisArg) {
  */
 export function objFilter(obj, fn, thisArg) {
 	const filteredObj = /** @type {Object.<string, T>} */ ({});
-	
+
 	if (!obj || !fn) return filteredObj;
-	
+
 	if (thisArg) {
 		const boundFn = bind(fn, thisArg);
 		Object.entries(obj).forEach(([key, value]) => {
@@ -196,7 +196,7 @@ export function objFilter(obj, fn, thisArg) {
  */
 export function objLength(obj) {
 	if (!obj) return 0;
-	return Object.keys(obj).filter(key => Object.hasOwn(obj, key)).length;
+	return Object.keys(obj).filter((key) => Object.hasOwn(obj, key)).length;
 }
 
 // DFS
@@ -263,13 +263,13 @@ export function dfsMod(obj, functor) {
 
 // legacy export with property shorthand
 export default {
-  bind,
-  objMap,
-  objReduce,
-  objForEach,
-  objForEachSorted,
-  objFilter,
-  objLength,
-  dfs,
-  dfsMod,
+	bind,
+	objMap,
+	objReduce,
+	objForEach,
+	objForEachSorted,
+	objFilter,
+	objLength,
+	dfs,
+	dfsMod,
 };
